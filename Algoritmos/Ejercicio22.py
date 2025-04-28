@@ -1,27 +1,65 @@
-def usar_la_fuerza(mochila):
+import random
+import time
+import colores
+
+def usar_la_fuerza(mochila:list, contador:int=0):
+    '''Busca en la mochila el sable de luz, si no lo encuentra, lo busca de nuevo'''
+    
     if not mochila:
-        return False, None
-    objeto_actual = mochila.pop(0)
-    if objeto_actual == "sable de luz":
-        return True, 1
-    encontrado, cantidad_sacados = usar_la_fuerza(mochila)
-    if encontrado:
-        return True, 1 + cantidad_sacados
+        print(colores.color("[x] El sable de luz no se encuentra en la mochila.", colores.ROJO))  
+        return -1  # -Retorna -1 si no se encuentra el sable de luz
+    
+    print(colores.color("[*] Buscando sable de luz...",colores.CIAN))
+    time.sleep(1)  # -Simula el tiempo de búsqueda
+    print(colores.color("[*] concentrando la fuerza...",colores.CIAN))
+    time.sleep(2)  # -Simula el tiempo de concentración
+    
+    item = mochila.pop() # -Saca un objeto de la mochila al azar
+    
+    if item == "Sable de luz":
+        print(colores.color(f"¡Lo encontreee! me llevo {contador + 1} intentos!",colores.VERDE))
+        return contador + 1  # -Retorna el número de intentos si se encuentra el sable de luz
     else:
-        return False, None
+        print(colores.color(f"[?] Qué es esto...? '{item}'. Mmmm no es el sable",colores.AMARILLO))
+        time.sleep(0.5)
+    return usar_la_fuerza(mochila, contador + 1)
+    
 
-mochila_con_sable = ["botella de agua", "comida", "sable de luz", "mapa"]
-encontrado_sable, objetos_sacados = usar_la_fuerza(mochila_con_sable.copy())
+def generar_mochila() -> list:
+    '''Genera una mochila con 20 objetos aleatorios de la lista de posibles objetos'''
+    # - Lista de objetos posibles
+    posibles_objetos: list = [
+        "Holocrón Jedi",
+        "Comunicador galáctico",
+        "Medpac",
+        "Comida racionada",
+        "Filtro de agua portátil",
+        "Cable de agarre",
+        "Manta térmica",
+        "Repulsor de emergencia",
+        "Módulo de traducción",
+        "Sensor de vida",
+        "Lentes de visión nocturna",
+        "Mapa estelar portátil",
+        "Cristal Kyber",
+        "Mochila de entrenamiento Jedi",
+        "Medidor de midiclorianos",
+        "Diario de meditación Jedi",
+        "Amuleto de su maestro",
+        "Grabador de sonido"
+    ]
+    mochila = random.choices(posibles_objetos, k=20)    # - Se genera una mochila con 20 objetos aleatorios de la lista de posibles objetos
 
-if encontrado_sable:
-    print(f"Se necesitó sacar {objetos_sacados} objetos para encontrar el sable de luz.")
-else:
-    print("El sable de luz no estaba en esta mochila.")
+    if random.random() < 0.5:                           # - 50% de probabilidad de agregar un sable de luz
+        indice = random.randint(0, 19)
+        mochila[indice] = "Sable de luz"
+    
+    return mochila
 
-mochila_sin_sable = ["botella de agua", "comida", "mapa"]
-encontrado_sable_sin, objetos_sacados_sin = usar_la_fuerza(mochila_sin_sable.copy())
+def main():
+    mochila = generar_mochila()
+    usar_la_fuerza(mochila, 0)
+    
 
-if encontrado_sable_sin:
-    print(f"Se necesitó sacar {objetos_sacados_sin} objetos para encontrar el sable de luz.")
-else:
-    print("El sable de luz no estaba en esta mochila.")
+if __name__ == "__main__":
+    main()
