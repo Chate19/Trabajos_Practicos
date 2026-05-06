@@ -105,8 +105,22 @@ for pc in ["Manjaro", "Red Hat", "Fedora"]:
     pila = red.dijkstra(pc)
     print(f"{pc} -> Costo: {get_costo_dijkstra(pila, 'Impresora')}")
 
-print("\n--- PUNTO D: Arbol Expansion Minima ---")
-print(f"Peso total: {red.prim()}")
+print("\n--- PUNTO D: Arbol Expansion Minima (Usando Kruskal) ---")
+arbol_expansion = red.kruskal("Switch 1") 
+peso_total = 0
+print("Conexiones necesarias para el cableado óptimo:")
+
+if isinstance(arbol_expansion, str):
+    para_cada_arista = arbol_expansion.split(';')
+    for arista in para_cada_arista:
+        origen, destino, peso = arista.split('-')
+        print(f" -> Conectar {origen} con {destino} (Costo: {peso})")
+        peso_total += int(peso)
+    print(f"\n>> Peso total del Árbol de Expansión Mínima: {peso_total}")
+else:
+    # Si devuelve una lista, significa que hay equipos totalmente aislados (bosques separados)
+    print("Atención: La red no está completamente interconectada.")
+    print(arbol_expansion)
 
 print("\n--- PUNTO E: PC mas cercana a Guarani ---")
 min_dist = float('inf')
@@ -143,3 +157,5 @@ red.insert_edge("Router 2", "Impresora", 22)
 for nb in ["Red Hat", "Debian", "Arch"]:
     print(f"BFS actualizado desde {nb}:")
     red.amplitude_sweep(nb)
+    print(f"DFS desde {nb}:")
+    red.deep_sweep(nb)
