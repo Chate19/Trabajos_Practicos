@@ -2,37 +2,7 @@ from graph import Graph
 from heap import HeapMin
 
 class CasaGraph(Graph):
-    def prim(self):
-        cant_nodos = 0
-        for _ in self: cant_nodos += 1
-            
-        if cant_nodos == 0: return 0
-        
-        visitados = [self[0].value]
-        heap = HeapMin()
-        
-        for arista in self[0].edges:
-            heap.arrive([self[0].value, arista.value], arista.weight)
-            
-        peso_total = 0
-        
-        while len(visitados) < cant_nodos and heap.size() > 0:
-            dato = heap.attention() 
-            peso = dato[0]
-            dst = dato[1][1]
-            
-            if dst not in visitados:
-                visitados.append(dst)
-                peso_total += peso
-                
-                pos = self.search(dst, 'value')
-                if pos is not None:
-                    nodo = self[pos]
-                    for arista in nodo.edges:
-                        if arista.value not in visitados:
-                            heap.arrive([nodo.value, arista.value], arista.weight)
-                            
-        return peso_total
+    pass  # Hereda todo de Graph (Kruskal, Dijkstra, etc.) sin añadir código extra
 
 def get_metros_dijkstra(stack, destino):
     metros = float('inf')
@@ -76,6 +46,7 @@ print("--- PUNTO C: Metros de cable (MST con Kruskal) ---")
 # Llamamos a Kruskal. Puedes pasarle cualquier ambiente como origen.
 arbol_kruskal = casa.kruskal("Cocina") 
 metros_totales = 0
+
 # Verificamos que Kruskal haya devuelto un string (lo normal si todo está conectado)
 if isinstance(arbol_kruskal, str):
     print("Cables a instalar para conectar toda la casa:")

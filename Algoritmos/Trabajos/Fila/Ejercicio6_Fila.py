@@ -1,6 +1,6 @@
 from list_ import Lista
 
-# 1. Definimos los criterios de orden para la lista profesional
+# Definimos los criterios de orden para la lista profesional
 def por_nombre(superheroe):
     return superheroe['nombre']
 

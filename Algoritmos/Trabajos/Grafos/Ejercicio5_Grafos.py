@@ -2,52 +2,13 @@ from graph import Graph
 from heap import HeapMin
 
 class RedGraph(Graph):
+    # Mantenemos este método porque se necesita para cargar el TIPO de equipo (pc, router, etc.)
     def insert_vertex(self, value, tipo=None):
         super().insert_vertex(value)
         if tipo:
             pos = self.search(value, 'value')
             if pos is not None:
                 self[pos].other_values = tipo
-
-    def prim(self):
-        # Contamos vértices manualmente
-        cantidad_vertices = 0
-        for _ in self:
-            cantidad_vertices += 1
-            
-        if cantidad_vertices == 0: return 0
-        
-        visitados = [self[0].value]
-        heap = HeapMin()
-        
-        # Carga inicial
-        for arista in self[0].edges:
-            # Guardamos: [origen, destino], peso
-            heap.arrive([self[0].value, arista.value], arista.weight)
-            
-        peso_total = 0
-        
-        while len(visitados) < cantidad_vertices and heap.size() > 0:
-            dato = heap.attention() 
-            # ESTRUCTURA DE DATO: (peso, [origen, destino])
-            
-            peso = dato[0]
-            origen = dato[1][0]
-            destino = dato[1][1]
-            
-            if destino not in visitados:
-                visitados.append(destino)
-                peso_total += peso
-                
-                # Buscar vecino para añadir sus aristas
-                pos_dest = self.search(destino, 'value')
-                if pos_dest is not None:
-                    nodo_dest = self[pos_dest]
-                    for arista in nodo_dest.edges:
-                        if arista.value not in visitados:
-                            heap.arrive([nodo_dest.value, arista.value], arista.weight)
-                            
-        return peso_total
 
 def get_costo_dijkstra(stack, destino):
     costo = float('inf')
