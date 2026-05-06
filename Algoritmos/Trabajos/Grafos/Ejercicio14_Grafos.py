@@ -72,8 +72,24 @@ for u, v, p in conexiones: casa.insert_edge(u, v, p)
 # --- RESOLUCION ---
 
 # C. Arbol Expansion Minima
-print("--- PUNTO C: Metros de cable (MST) ---")
-print(f"Total necesario: {casa.prim()} metros")
+print("--- PUNTO C: Metros de cable (MST con Kruskal) ---")
+# Llamamos a Kruskal. Puedes pasarle cualquier ambiente como origen.
+arbol_kruskal = casa.kruskal("Cocina") 
+metros_totales = 0
+# Verificamos que Kruskal haya devuelto un string (lo normal si todo está conectado)
+if isinstance(arbol_kruskal, str):
+    print("Cables a instalar para conectar toda la casa:")
+    lista_de_cables = arbol_kruskal.split(';')
+    for cable in lista_de_cables:
+        origen, destino, metros = cable.split('-')
+        print(f" -> Conectar {origen} con {destino} ({metros} metros)")
+        # Sumamos los metros al total (convirtiendo el texto a entero)
+        metros_totales += int(metros)
+    print(f"\n>> Total necesario: {metros_totales} metros de cable.")
+else:
+    # Si devuelve una lista, significa que la casa quedó dividida y hay cuartos sin acceso
+    print("Atención: Hay ambientes completamente aislados en la casa.")
+    print(arbol_kruskal)
 
 # D. Camino mas corto (Router a Smart TV)
 print("\n--- PUNTO D: Router (Hab 1) a Smart TV (Sala) ---")

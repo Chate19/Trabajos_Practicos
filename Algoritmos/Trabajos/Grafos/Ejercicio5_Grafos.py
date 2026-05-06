@@ -105,7 +105,7 @@ for pc in ["Manjaro", "Red Hat", "Fedora"]:
     pila = red.dijkstra(pc)
     print(f"{pc} -> Costo: {get_costo_dijkstra(pila, 'Impresora')}")
 
-print("\n--- PUNTO D: Arbol Expansion Minima (Usando Kruskal) ---")
+print("\n--- PUNTO D: Arbol Expansion Minima ---")
 arbol_expansion = red.kruskal("Switch 1") 
 peso_total = 0
 print("Conexiones necesarias para el cableado óptimo:")
