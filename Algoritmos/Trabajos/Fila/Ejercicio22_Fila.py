@@ -1,120 +1,19 @@
-class Lista:
-    def __init__(self):
-        self.elementos = []
+from list_ import Lista
 
-    def insertar(self, dato):
-        self.elementos.append(dato)
+# 1. Criterios de orden: Fundamentales para la búsqueda binaria
+def por_nombre(jedi):
+    return jedi['nombre']
 
-    def eliminar(self, clave, valor):
-        idx = -1
-        for i, elem in enumerate(self.elementos):
-            if elem.get(clave) == valor:
-                idx = i
-                break
-        if idx != -1:
-            return self.elementos.pop(idx)
-        return None
+def por_especie(jedi):
+    return jedi['especie']
 
-    def buscar(self, clave, valor):
-        for elem in self.elementos:
-            if elem.get(clave) == valor:
-                return elem
-        return None
-
-    def filtrar(self, condicion):
-        return [e for e in self.elementos if condicion(e)]
-
-    def contar_por(self, clave):
-        cont = {}
-        for elem in self.elementos:
-            cont[elem[clave]] = cont.get(elem[clave], 0) + 1
-        return cont
-
-    def ordenar(self, clave):
-        self.elementos.sort(key=lambda x: x[clave])
-
-    def mostrar_todos(self):
-        for e in self.elementos:
-            print(e)
-
-
-# ACTIVIDADES
-
-def actividad_a(lista):
-    print("\n[a] Listado ordenado por nombre:")
-    lista.ordenar("nombre")
-    for j in lista.elementos:
-        print(" -", j["nombre"])
-    print("\n[a] Listado ordenado por especie:")
-    lista.ordenar("especie")
-    for j in lista.elementos:
-        print(" -", j["nombre"], f"({j['especie']})")
-
-
-def actividad_b(lista):
-    print("\n[b] Info completa de Ahsoka Tano y Kit Fisto:")
-    for nom in ["Ahsoka Tano", "Kit Fisto"]:
-        j = lista.buscar("nombre", nom)
-        print(f" - {nom}: {j if j else 'No encontrado'}")
-
-
-def actividad_c(lista):
-    print("\n[c] Padawans de Yoda y Luke Skywalker:")
-    maestros = ["Yoda", "Luke Skywalker"]
-    for m in maestros:
-        print(f"   Padawans de {m}:")
-        pads = lista.filtrar(lambda j: m in j["maestros"])
-        for p in pads:
-            print("    -", p["nombre"])
-
-
-def actividad_d(lista):
-    print("\n[d] Jedi de especie humana y twi'lek:")
-    resultado = lista.filtrar(lambda j: j["especie"].lower() in ("humana", "humano", "twi'lek"))
-    for j in resultado:
-        print(" -", j["nombre"], f"({j['especie']})")
-
-
-def actividad_e(lista):
-    print("\n[e] Jedi cuyo nombre comienza con 'A':")
-    resultado = lista.filtrar(lambda j: j["nombre"].startswith("A"))
-    for j in resultado:
-        print(" -", j["nombre"])
-
-
-def actividad_f(lista):
-    print("\n[f] Jedi que usaron sable de más de un color:")
-    resultado = lista.filtrar(lambda j: len(j["colores_sable"]) > 1)
-    for j in resultado:
-        print(" -", j["nombre"], "->", j["colores_sable"])
-
-
-def actividad_g(lista):
-    print("\n[g] Jedi que usaron sable amarillo o violeta:")
-    resultado = lista.filtrar(
-        lambda j: any(c.lower() in ("amarillo", "violeta") for c in j["colores_sable"])
-    )
-    for j in resultado:
-        print(" -", j["nombre"], "->", j["colores_sable"])
-
-
-def actividad_h(lista):
-    print("\n[h] Padawans de Qui-Gon Jinn y Mace Windu:")
-    for m in ["Qui-Gon Jinn", "Mace Windu"]:
-        print(f"   Padawans de {m}:")
-        pads = lista.filtrar(lambda j: m in j["maestros"])
-        for p in pads:
-            print("    -", p["nombre"])
-
-
-
-# PROGRAMA PRINCIPAL
-
-if __name__ == "__main__":
-    lista = Lista()
-
-
-jedi_data = [
+def preparar_lista_jedi():
+    lista_jedi = Lista()
+    # Vinculamos los criterios para que la lista sepa cómo operar
+    lista_jedi.add_criterion('nombre', por_nombre)
+    lista_jedi.add_criterion('especie', por_especie)
+    
+    jedi_data = [
     {"nombre": "Anakin Skywalker", "maestros": ["Qui-Gon Jinn"], "colores_sable": ["azul"], "especie": "humano"},
     {"nombre": "Ahsoka Tano", "maestros": ["Anakin Skywalker"], "colores_sable": ["verde", "blanco"], "especie": "togruta"},
     {"nombre": "Kit Fisto", "maestros": ["Yoda"], "colores_sable": ["verde"], "especie": "nautolano"},
@@ -131,14 +30,36 @@ jedi_data = [
     {"nombre": "Eeth Koth", "maestros": ["Mace Windu"], "colores_sable": ["azul"], "especie": "zorro"}
 ]
     
-for j in jedi_data:
-    lista.insertar(j)
+    for j in jedi_data:
+        lista_jedi.append(j)
+    return lista_jedi
 
-actividad_a(lista)
-actividad_b(lista)
-actividad_c(lista)
-actividad_d(lista)
-actividad_e(lista)
-actividad_f(lista)
-actividad_g(lista)
-actividad_h(lista)
+# --- RAZONAMIENTO DE LAS ACTIVIDADES ---
+
+def ejecutar_actividades(lista):
+    # [a] Listado ordenado (Uso de sort_by_criterion)
+    print("\n[a] Orden por nombre:")
+    lista.sort_by_criterion('nombre')
+    lista.show()
+
+    # [b] Búsqueda binaria por nombre
+    print("\n[b] Buscando a Ahsoka Tano:")
+    pos = lista.search("Ahsoka Tano", "nombre")
+    if pos is not None:
+        print(f"Encontrado: {lista[pos]}")
+
+    # [c] Filtrado por Maestros (Uso de lógica booleana)
+    print("\n[c] Padawans de Luke Skywalker:")
+    for jedi in lista:
+        if "Luke Skywalker" in jedi["maestros"]:
+            print(f" - {jedi['nombre']}")
+
+    # [f] Jedi con más de un color de sable
+    print("\n[f] Usaron más de un color:")
+    for jedi in lista:
+        if len(jedi["colores_sable"]) > 1:
+            print(f" - {jedi['nombre']}: {jedi['colores_sable']}")
+
+if __name__ == "__main__":
+    mi_lista_jedi = preparar_lista_jedi()
+    ejecutar_actividades(mi_lista_jedi)

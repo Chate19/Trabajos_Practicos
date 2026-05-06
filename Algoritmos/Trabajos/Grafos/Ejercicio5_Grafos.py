@@ -9,7 +9,6 @@ class RedGraph(Graph):
             if pos is not None:
                 self[pos].other_values = tipo
 
-    # --- CORRECCIÓN AQUÍ ---
     def prim(self):
         # Contamos vértices manualmente
         cantidad_vertices = 0

@@ -1,193 +1,102 @@
 #22. Se tienen una cola con personajes de Marvel Cinematic Universe (MCU), de los cuales se conoce el nombre del personaje, el nombre del superhéroe y su género (Masculino M y Femenino F) –por ejemplo {Tony Stark, Iron Man, M}, {Steve Rogers, Capitán América, M}, {Natasha Romanoff, Black Widow, F}, etc., desarrollar un algoritmo que resuelva las siguientes actividades:
-	#a. determinar el nombre del personaje de la superhéroe Capitana Marvel;
-	#b. mostrar los nombre de los superhéroes femeninos;
-	#c. mostrar los nombres de los personajes masculinos;
-	#d. determinar el nombre del superhéroe del personaje Scott Lang;
-	#e. mostrar todos datos de los superhéroes o personaje cuyos nombres comienzan con la letra S;
-	#f. determinar si el personaje Carol Danvers se encuentra en la cola e indicar su nombre de superhéroes.
- 
-from queue import Queue
+    #a. determinar el nombre del personaje de la superhéroe Capitana Marvel;
+    #b. mostrar los nombre de los superhéroes femeninos;
+    #c. mostrar los nombres de los personajes masculinos;
+    #d. determinar el nombre del superhéroe del personaje Scott Lang;
+    #e. mostrar todos datos de los superhéroes o personaje cuyos nombres comienzan con la letra S;
+    #f. determinar si el personaje Carol Danvers se encuentra en la cola e indicar su nombre de superhéroes.
+
+from queue_ import Queue
 
 def crear_personaje(nombre_real, superheroe, genero):
-    """
-    Crea un diccionario que representa un personaje del MCU.
-
-    Parámetros:
-    - nombre_real (str): nombre del personaje
-    - superheroe (str): nombre del superhéroe
-    - genero (str): 'M' para masculino, 'F' para femenino
-
-    Retorna:
-    - dict: personaje
-    """
     return {"nombre_real": nombre_real, "superheroe": superheroe, "genero": genero.upper()}
 
+# a. Determinar el nombre del personaje de la superhéroe Capitana Marvel
 def obtener_personaje_de_superheroe(cola, nombre_superheroe):
-    """
-    Busca el nombre del personaje real dado el nombre del superhéroe.
-
-    Parámetros:
-    - cola (Queue): cola de personajes
-    - nombre_superheroe (str): superhéroe buscado
-
-    Retorna:
-    - Queue: cola restaurada
-    - str|None: nombre del personaje si se encuentra, None en caso contrario
-    """
-    cola_aux = Queue()
     resultado = None
-
-    while not cola.empty():
-        p = cola.get()
+    # Usamos el tamaño para rotar la cola sin perder datos
+    for _ in range(cola.size()):
+        p = cola.attention() # Desencolamos
         if p["superheroe"].lower() == nombre_superheroe.lower():
             resultado = p["nombre_real"]
-        cola_aux.put(p)
+        cola.arrive(p) # Re-encolamos al final
+    return resultado
 
-    return cola_aux, resultado
-
+# b. Mostrar los nombres de los superhéroes femeninos
 def mostrar_superheroes_femeninos(cola):
-    """
-    Muestra los nombres de superhéroes femeninos.
-
-    Parámetros:
-    - cola (Queue): cola de personajes
-
-    Retorna:
-    - Queue: cola restaurada
-    """
-    cola_aux = Queue()
-    print("\n Superhéroes femeninos:")
-    while not cola.empty():
-        p = cola.get()
+    print("\n[b] Superhéroes femeninos:")
+    for _ in range(cola.size()):
+        p = cola.attention()
         if p["genero"] == "F":
-            print(p["superheroe"])
-        cola_aux.put(p)
-    return cola_aux
+            print(f" - {p['superheroe']}")
+        cola.arrive(p)
 
+# c. Mostrar los nombres de los personajes masculinos
 def mostrar_personajes_masculinos(cola):
-    """
-    Muestra los nombres de personajes masculinos (nombre real).
-
-    Parámetros:
-    - cola (Queue): cola de personajes
-
-    Retorna:
-    - Queue: cola restaurada
-    """
-    cola_aux = Queue()
-    print("\n Personajes masculinos:")
-    while not cola.empty():
-        p = cola.get()
+    print("\n[c] Personajes masculinos:")
+    for _ in range(cola.size()):
+        p = cola.attention()
         if p["genero"] == "M":
-            print(p["nombre_real"])
-        cola_aux.put(p)
-    return cola_aux
+            print(f" - {p['nombre_real']}")
+        cola.arrive(p)
 
+# d. Determinar el nombre del superheroe del personaje Scott Lang
 def obtener_superheroe_de_personaje(cola, nombre_personaje):
-    """
-    Busca el nombre del superhéroe dado el nombre del personaje.
-
-    Parámetros:
-    - cola (Queue): cola de personajes
-    - nombre_personaje (str): nombre del personaje
-
-    Retorna:
-    - Queue: cola restaurada
-    - str|None: nombre del superhéroe si se encuentra, None si no está
-    """
-    cola_aux = Queue()
     resultado = None
-
-    while not cola.empty():
-        p = cola.get()
+    for _ in range(cola.size()):
+        p = cola.attention()
         if p["nombre_real"].lower() == nombre_personaje.lower():
             resultado = p["superheroe"]
-        cola_aux.put(p)
+        cola.arrive(p)
+    return resultado
 
-    return cola_aux, resultado
-
+# e. Mostrar todos los datos de los que comienzan con 'S'
 def mostrar_datos_con_s(cola):
-    """
-    Muestra todos los datos de los personajes o superhéroes que comienzan con la letra 'S'.
-
-    Parámetros:
-    - cola (Queue): cola de personajes
-
-    Retorna:
-    - Queue: cola restaurada
-    """
-    cola_aux = Queue()
-    print("\n Personajes o superhéroes que comienzan con 'S':")
-    while not cola.empty():
-        p = cola.get()
+    print("\n[e] Personajes o superhéroes que comienzan con 'S':")
+    for _ in range(cola.size()):
+        p = cola.attention()
         if p["nombre_real"].lower().startswith("s") or p["superheroe"].lower().startswith("s"):
-            print(f"Nombre real: {p['nombre_real']} | Superhéroe: {p['superheroe']} | Género: {p['genero']}")
-        cola_aux.put(p)
-    return cola_aux
+            print(f" - {p}")
+        cola.arrive(p)
 
-def buscar_personaje(cola, nombre_personaje):
-    """
-    Verifica si un personaje está en la cola e imprime su nombre de superhéroe.
-
-    Parámetros:
-    - cola (Queue): cola de personajes
-    - nombre_personaje (str): nombre del personaje a buscar
-
-    Retorna:
-    - Queue: cola restaurada
-    - bool: True si se encuentra, False si no
-    """
-    cola_aux = Queue()
-    encontrado = False
+# f. Determinar si Carol Danvers está e indicar su superhéroe
+def buscar_personaje_y_heroe(cola, nombre_personaje):
     superheroe = None
-
-    while not cola.empty():
-        p = cola.get()
+    for _ in range(cola.size()):
+        p = cola.attention()
         if p["nombre_real"].lower() == nombre_personaje.lower():
-            encontrado = True
             superheroe = p["superheroe"]
-        cola_aux.put(p)
+        cola.arrive(p)
+    return superheroe
 
-    if encontrado:
-        print(f"\n El personaje {nombre_personaje} se encuentra en la cola y su superhéroe es: {superheroe}")
-    else:
-        print(f"\n El personaje {nombre_personaje} no se encuentra en la cola.")
-    return cola_aux, encontrado
-
-
-#              BLOQUE PRINCIPAL DE PRUEBA
-
+# --- BLOQUE PRINCIPAL ---
 if __name__ == "__main__":
-    cola_personajes = Queue()
+    cola_mcu = Queue()
+    
     personajes = [
         crear_personaje("Tony Stark", "Iron Man", "M"),
         crear_personaje("Steve Rogers", "Capitán América", "M"),
         crear_personaje("Natasha Romanoff", "Black Widow", "F"),
         crear_personaje("Carol Danvers", "Capitana Marvel", "F"),
         crear_personaje("Scott Lang", "Ant-Man", "M"),
-        crear_personaje("Stephen Strange", "Doctor Strange", "M"),
-        crear_personaje("Shuri", "Shuri", "F")
+        crear_personaje("Stephen Strange", "Doctor Strange", "M")
     ]
 
     for p in personajes:
-        cola_personajes.put(p)
+        cola_mcu.arrive(p) # Cargamos la cola
 
-    # a. Nombre del personaje de Capitana Marvel
-    cola_personajes, personaje_cm = obtener_personaje_de_superheroe(cola_personajes, "Capitana Marvel")
-    print(f"\n El personaje que interpreta a Capitana Marvel es: {personaje_cm}")
-
-    # b. Superhéroes femeninos
-    cola_personajes = mostrar_superheroes_femeninos(cola_personajes)
-
-    # c. Personajes masculinos
-    cola_personajes = mostrar_personajes_masculinos(cola_personajes)
-
-    # d. Superhéroe de Scott Lang
-    cola_personajes, sh_scott = obtener_superheroe_de_personaje(cola_personajes, "Scott Lang")
-    print(f"\n El superhéroe de Scott Lang es: {sh_scott}")
-
-    # e. Mostrar datos de nombres que comienzan con S
-    cola_personajes = mostrar_datos_con_s(cola_personajes)
-
-    # f. Verificar si Carol Danvers está y mostrar su superhéroe
-    cola_personajes, _ = buscar_personaje(cola_personajes, "Carol Danvers")
+    # Ejecución de actividades
+    nom_real = obtener_personaje_de_superheroe(cola_mcu, "Capitana Marvel")
+    print(f"[a] Personaje de Capitana Marvel: {nom_real}")
+    
+    mostrar_superheroes_femeninos(cola_mcu)
+    mostrar_personajes_masculinos(cola_mcu)
+    
+    heroe_scott = obtener_superheroe_de_personaje(cola_mcu, "Scott Lang")
+    print(f"\n[d] Superhéroe de Scott Lang: {heroe_scott}")
+    
+    mostrar_datos_con_s(cola_mcu)
+    
+    heroe_carol = buscar_personaje_y_heroe(cola_mcu, "Carol Danvers")
+    if heroe_carol:
+        print(f"\n[f] Carol Danvers está y es {heroe_carol}")
